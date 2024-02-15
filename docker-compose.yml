@@ -1,0 +1,52 @@
+version: "3.9"
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+    env_file:
+      - ./.env.dev
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile.postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - "POSTGRES_HOST_AUTH_METHOD=trust"
+
+  celery:
+    build: .
+    command: celery -A config worker -l INFO
+    volumes:
+      - .:/code
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - web
+      - redis
+
+  celery-beat:
+    build: .
+    command: celery -A config beat -l INFO
+    volumes:
+      - .:/code
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - web
+      - redis
+
+  redis:
+    image: "redis:alpine"
+
+  
+
+volumes:
+  postgres_data:
+

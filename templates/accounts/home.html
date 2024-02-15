@@ -1,0 +1,22 @@
+<h1> GPT4 over Email </h1>
+
+<ol>
+
+<li> Tell us what email you will be using to send messages to GPT4 </li>
+<li> Setup billing as per usage billing. $19.99 per 200 emails. Simple and flexible. Only pay for what you use.</li>
+<li> Send your emails to ruby@spandreed.com </li>
+<li> Emails will be processed and sent back to you. </li>
+
+</ol>
+<form
+hx-post="{% url 'create_account' %}"
+hx-target="this"
+hx-swap="outerHTML"
+> 
+{% csrf_token %}
+    <input type="text" id="email" name="email" placeholder="Your email: ">
+    <input type="submit" value="Submit">
+</form>
+
+<script src="https://unpkg.com/htmx.org@1.9.10"></script>
+<script src="https://js.stripe.com/v3/"></script>

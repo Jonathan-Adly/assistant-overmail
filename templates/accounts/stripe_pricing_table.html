@@ -1,0 +1,33 @@
+
+
+<p> Billing Threshold: 200 emails </p>
+<p> Cost per query: 10 cents </p>
+<p> Billing cycle: Billed automatically at billing threshold </p>
+
+<div id="checkout">
+    <!-- Checkout will insert the payment form here -->
+</div>
+
+<script>
+
+async function initializeStripeCheckout() {
+
+    const stripe = Stripe('{{ stripe_public_key }}'); 
+    const clientSecret = '{{ client_secret }}'; 
+    
+    try {
+        const checkout = await stripe.initEmbeddedCheckout({
+            clientSecret: clientSecret,
+        });
+        
+        // Mount Checkout
+        checkout.mount('#checkout');
+    } catch (error) {
+        console.error('Error initializing Stripe Checkout', error);
+        
+    }
+}
+
+
+initializeStripeCheckout();
+</script>

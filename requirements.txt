@@ -1,0 +1,15 @@
+asgiref==3.7.2
+Django==4.2.10
+sqlparse==0.4.4
+celery ==5.2.7
+redis==4.6.0
+django-redis==5.4.0
+stripe==5.2.0
+psycopg[binary]==3.1.9
+environs[django]==9.5.0
+whitenoise==6.2.0
+openai==1.10.0
+gunicorn==20.1.0
+django-celery-beat==2.5.0
+pgvector==0.2.3
+django-allauth==0.61.1
