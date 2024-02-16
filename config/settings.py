@@ -157,7 +157,7 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-DEFAULT_FROM_EMAIL = "hello@" + SITE_URL
+DEFAULT_FROM_EMAIL = "hello@" + SITE_URL.split("//")[-1]
 REPLY_TO_EMAIL = DEFAULT_FROM_EMAIL
 CONTACT_EMAIL = DEFAULT_FROM_EMAIL
 
