@@ -95,6 +95,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "config.context_processors.contact_email",
             ],
         },
     },
@@ -156,8 +157,9 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-DEFAULT_FROM_EMAIL = '"Ruby" <ruby@spanreed.com>'
-REPLY_TO_EMAIL = "ruby@spanreed.com"
+DEFAULT_FROM_EMAIL = "hello@" + SITE_URL
+REPLY_TO_EMAIL = DEFAULT_FROM_EMAIL
+CONTACT_EMAIL = DEFAULT_FROM_EMAIL
 
 if DEBUG:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
@@ -193,15 +195,6 @@ CELERY_RESULT_BACKEND = env("REDIS_URL")
 CELERY_TASK_SERIALIZER = "json"
 CELERY_ACCEPT_CONTENT = ["json"]
 
-# stripe
-"""
-STRIPE_API_KEY = env("STRIPE_API_KEY")
-STRIPE_STARTER_PRICE = env("STRIPE_STARTER_PRICE")
-STRIPE_PRO_PRICE = env("STRIPE_PRO_PRICE")
-STRIPE_STARTER_PRODUCT = env("STRIPE_STARTER_PRODUCT")
-STRIPE_PRO_PRODUCT = env("STRIPE_PRO_PRODUCT")
-WEBHOOK_SECRET = env("WEBHOOK_SECRET")
-"""
 
 # redis cache
 CACHES = {
@@ -282,5 +275,4 @@ ACCOUNT_LOGOUT_ON_GET = True
 
 
 # stripe
-STRIPE_PUBLIC_KEY = env("STRIPE_PUBLIC_KEY")
 STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY")
