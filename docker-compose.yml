@@ -45,7 +45,6 @@ services:
   redis:
     image: "redis:alpine"
 
-  
 
 volumes:
   postgres_data:

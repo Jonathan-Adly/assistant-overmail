@@ -1,3 +1,6 @@
+import json
+
+import requests
 import stripe
 from django.conf import settings
 from django.http import HttpResponse
@@ -5,6 +8,7 @@ from django.shortcuts import render
 from django.utils.crypto import get_random_string
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+from svix.webhooks import Webhook, WebhookVerificationError
 
 from config.tasks import bill_user, send_invitation_email
 
@@ -18,11 +22,7 @@ def home(request):
 @csrf_exempt
 @require_POST
 def stripe_webhook(request):
-    webhook_secret = settings.WEBHOOK_SECRET
-    if settings.DEBUG:
-        webhook_secret = (
-            "whsec_96e16cf2eda14bc3513af72b38eea872a29c6a1324ed4fbf27d863e39a024515"
-        )
+    webhook_secret = settings.STRIPE_WH_SECRET
     signature = request.headers.get("stripe-signature")
     stripe.api_key = settings.STRIPE_API_KEY
     try:
@@ -47,11 +47,26 @@ def stripe_webhook(request):
 @csrf_exempt
 @require_POST
 def alby_webhook(request):
+    headers = request.headers
+    payload = request.body
     try:
+        wh = Webhook(settings.ALBY_WH_SECRET)
+        msg = wh.verify(payload, headers)
         payload = json.loads(request.body)
-        AlbyWebhook.objects.create(payload=payload)
+        if not payload["payer_email"]:
+            return HttpResponse(status=200)
+        fiat_in_cents = int(payload["fiat_in_cents"])
+        # should be around $20 USD
+        if not 1800 < fiat_in_cents < 2200:
+            return HttpResponse(status=200)
+        alby_payment = AlbyWebhook.objects.create(payload=payload)
+        anon, created = Anon.objects.get_or_create(
+            email=alby_payment.payload["payer_email"]
+        )
+        anon.emails_left += 200
+        anon.save()
         return HttpResponse(status=200)
-    except json.JSONDecodeError:
+    except json.JSONDecodeError or WebhookVerificationError:
         print(request.body)
         return HttpResponse(status=400)
 

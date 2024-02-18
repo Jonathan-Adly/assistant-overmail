@@ -1,0 +1,62 @@
+{% load static %}
+{% load tailwind_cli %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head> 
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <link
+    rel="shortcut icon"
+    href="{% static 'img/logo_ico.ico' %}"
+    type="image/x-icon"
+  />
+
+ <!-- Facebook meta tags -->
+ <meta property="og:title" content="Selma" />
+ <meta property="og:description" content="Selma is an AI assistant over email." />
+ <meta property="og:image" content="{% static 'img/logo_bg.png' %}" />
+
+ <!-- Twitter meta tags -->
+ <meta name="twitter:card" content="summary_large_image" />
+ <meta name="twitter:title" content="Selma" />
+ <meta name="twitter:description" content="Selma is an AI assistant over email." />
+ <meta name="twitter:image" content="{% static 'img/logo_bg.png' %}" />
+
+ <!-- Search engine meta tags -->
+ <meta name="description"
+     content="Selma is a AI assistant over email." />
+
+<title>{% block title %} Selma {% endblock title %}</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+
+{% tailwind_css %}
+<style>
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px); /* Adjust as needed */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.fade-in {
+    animation: fadeInUp 2s ease-in-out;
+}
+</style>
+<body class="bg-gray-100" 
+hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+> 
+  {% block content %} {% endblock %}
+
+  <script src="{% static 'js/htmx.min.js' %}" defer></script>
+
+  <script src="{% static 'js/hyperscript.min.js'%}" defer></script>
+ 
+ </body>

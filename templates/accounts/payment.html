@@ -1,0 +1,105 @@
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Payment Page</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+<style>
+  body {
+    font-family: 'Montserrat', sans-serif;
+  }
+  .primary-color {
+    background-color: #1EC998;
+  }
+  .primary-color-hover:hover {
+    background-color: #1DBA88;
+  }
+  .primary-text-color {
+    color: #1EC998;
+  }
+  .secondary-bg-color {
+    background-color: #F9F9FB;
+  }
+</style>
+</head>
+
+
+
+
+
+<body class="bg-gray-100">
+<div class="min-h-screen flex justify-center items-center">
+<div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl mx-4">
+    <h1> GPT4 over Email </h1>
+    <ol>
+    <li> Tell us what email you will be using to send messages to GPT4 </li>
+    <li> Setup billing as per usage billing. $20 per 200 emails. Simple and flexible. Only pay for what you use.</li>
+    <li> Send your emails to {{ GPT4_EMAIL }} </li>
+    <li> Emails will be processed and sent back to you. </li>
+    </ol>
+<div class="flex justify-between">
+<!-- Left Side -->
+<div class="w-1/2 pr-4">
+<h1 class="text-2xl font-semibold mb-6">JTM Technology</h1>
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-4xl font-bold">$1.00</h2>
+<div class="flex items-center border rounded-md">
+<button class="px-3 py-1 text-gray-600">-</button>
+<span class="px-3 py-1 border-l border-r">1</span>
+<button class="px-3 py-1 text-gray-600">+</button>
+</div>
+</div>
+<div class="mb-6">
+<h3 class="font-semibold mb-2">Summary</h3>
+<div class="flex justify-between">
+<span>AI over mail</span>
+<span>$1.00</span>
+</div>
+<div class="flex justify-between mt-4">
+<span class="font-semibold">Total Due</span>
+<span class="font-semibold">$1.00</span>
+</div>
+</div>
+<p class="text-gray-600 mb-6">AI over mail</p>
+<p class="text-gray-600">$20 is 200 emails. Use LLMs over email. $0.10 per email.</p>
+<div class="text-gray-400 text-sm mt-6">
+Powered by <span class="text-black">zaprite</span>
+</div>
+<div class="flex space-x-4 text-gray-400 text-sm mt-2">
+<a class="hover:text-gray-600" href="#">Help &amp; Support</a>
+<span>|</span>
+<a class="hover:text-gray-600" href="#">Privacy Policy</a>
+<span>|</span>
+<a class="hover:text-gray-600" href="#"><i class="fab fa-twitter"></i></a>
+</div>
+</div>
+<!-- Right Side -->
+<div class="w-1/2 pl-4 secondary-bg-color rounded-lg">
+<div class="flex flex-col items-center py-8">
+<h2 class="text-2xl font-semibold mb-6 text-center">Select Payment Method</h2>
+<button class="primary-color text-white py-2 px-4 rounded-md mb-2 w-1/2 text-center flex justify-between items-center">
+<span class="bg-green-700 text-xs py-1 px-2 rounded-full">+20%</span>
+<span>Card</span>
+<span class="text-sm"><i class="fas fa-minus"></i></span>
+</button>
+<button class="primary-color text-white py-2 px-4 rounded-md mb-2 w-1/2 text-center flex justify-between items-center">
+<span>Lightning</span>
+<span class="text-sm"><i class="fas fa-bolt"></i></span>
+</button>
+<button class="primary-color text-white py-2 px-4 rounded-md w-1/2 text-center flex justify-between items-center">
+<span>Bitcoin</span>
+<span class="text-sm"><i class="fab fa-bitcoin"></i></span>
+</button>
+</div>
+<div class="text-black flex items-center mt-4 justify-center">
+<i class="fas fa-arrow-left mr-2"></i>
+<a class="hover:text-gray-800" href="#">Go back</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

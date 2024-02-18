@@ -26,11 +26,12 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=False)
 
-ALLOWED_HOSTS = [".spanreed.com", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 SITE_URL = env("SITE_URL")
-# Application definition
+ALLOWED_HOSTS += [f".{SITE_URL.split('//')[-1]}"]
 
+# Application definition
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
     "allauth.account",
     "django_celery_beat",
     "whitenoise.runserver_nostatic",
+    "django_tailwind_cli",
     # local
     "accounts",
 ]
@@ -95,7 +97,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "config.context_processors.contact_email",
+                "config.context_processors.llm_email",
             ],
         },
     },
@@ -158,8 +160,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 DEFAULT_FROM_EMAIL = "hello@" + SITE_URL.split("//")[-1]
-REPLY_TO_EMAIL = DEFAULT_FROM_EMAIL
-CONTACT_EMAIL = DEFAULT_FROM_EMAIL
+REPLY_TO_EMAIL = "hello@" + SITE_URL.split("//")[-1]
+GPT4_EMAIL = "assistant@" + SITE_URL.split("//")[-1]
 
 if DEBUG:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
@@ -261,9 +263,6 @@ ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_VERIFICATION = "none"
-ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 5
-ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
-ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 86400
 ACCOUNT_LOGOUT_REDIRECT_URL = "home"
 ACCOUNT_EMAIL_SUBJECT_PREFIX = ""
 if DEBUG:
@@ -276,3 +275,8 @@ ACCOUNT_LOGOUT_ON_GET = True
 
 # stripe
 STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY")
+STRIPE_WH_SECRET = env("STRIPE_WH_SECRET")
+
+# alby
+ALBY_WH_SECRET = env("ALBY_WH_SECRET")
+ALBY_API_KEY = env("ALBY_API_KEY")
