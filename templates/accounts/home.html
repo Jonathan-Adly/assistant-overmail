@@ -4,7 +4,7 @@
 <header class="container mx-auto px-6 py-4 w-full">
     <nav class="flex justify-between">
         <img src= "{% static 'img/logo_bg.png' %}" width="34px" height="34px" alt="logo" />
-        <div class="hidden md:flex space-x-6">
+        <div class="flex space-x-6">
             <a class="text-gray-600 hover:text-gray-900" href="#">About</a>
             <a class="text-gray-600 hover:text-gray-900" href="#">Pricing</a>
             <a class="text-gray-600 hover:text-gray-900" href="#">Contact</a>
@@ -15,7 +15,9 @@
 
     <div class="mt-8 pt-6">
         <div class="flex justify-center">
-            <div class="bg-green-100 text-green-700 px-4 py-4 rounded inline-flex items-center">
+            <div class="bg-green-100 text-green-700 px-4 py-4 rounded-lg inline-flex items-center opacity-0"
+            _="on load wait 2s add .fade-in to me then remove .opacity-0 from me"
+            >
                 <span class="text-xs font-semibold mr-2">COMING SOON</span> Introducing Selma, A Multi-agent AI shared inbox for SaaS customer support
                 <a class="text-xs font-semibold ml-2" href="#">Learn more →</a>
             </div>
@@ -23,22 +25,30 @@
         
     </div>
 </header>
-<main class="container mx-auto px-6 mt-2 text-center">
-    <h1 class="text-4xl font-semibold text-gray-900 mb-6"
-    _="on load wait 0.3s then add .fade-in to me">Create an AI assistant for your inbox</h1>
-        <p class="text-lg text-gray-600 mb-12"
+<main class="container mx-auto px-6 mt-2 text-center mb-12">
+    <h1 class="text-4xl font-semibold text-gray-900 mb-6 opacity-0" id="header-text"
+    _="on load add .fade-in to me then remove .opacity-0 from me">Create an AI assistant for your inbox</h1>
+        <p class="text-lg text-gray-600 mb-12 opacity-0" id="sub-header-text"
+        _="on load wait 0.5s then add .fade-in to me then remove .opacity-0 from me"
         >
-            Set up an email assistant powered by GPT-4 in seconds and start sending your emails to {{ GPT4_EMAIL }}.<br/>
+            Set up an email assistant powered by GPT-4 in seconds. Send your emails to <strong> {{ GPT4_EMAIL }}</strong>.<br/>
             Receive responses seamlessly. Simple and flexible. Only pay for what you use.
+         
         </p>
-<div class="flex justify-center items-center space-x-4">
-<input class="w-1/4 py-3 px-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Your domain name" type="text" value="piedpiper.com"/>
-<span class="text-gray-500">FORWARDS TO</span>
-<input class="w-1/4 py-3 px-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Your email address" type="email" value="richard.hendricks@gmail.com"/>
-<button class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded">
-                Create a free alias
+<div class="flex justify-center items-center space-x-4 opacity-0" id="email-container"
+_= "on load wait 1s add .fade-in to me then remove .opacity-0 from me"
+>
+    <input class="w-full md:w-1/2 py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Your Email" type="text" />
+    
+    <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg">
+                Create Assistant
             </button>
 </div>
+<p class="text-green-500 mt-5 opacity-0"
+_= "on load wait 2.5s add .fade-in to me then remove .opacity-0 from me"
+>Pricing: $20 per 200 emails</p>
 </main>
+<hr>
+
 
 {% endblock content %}
