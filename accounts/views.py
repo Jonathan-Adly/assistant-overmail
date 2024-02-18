@@ -19,6 +19,14 @@ def home(request):
     return render(request, "accounts/home.html")
 
 
+def about(request):
+    return render(request, "accounts/about.html")
+
+
+def pricing(request):
+    return render(request, "accounts/pricing.html")
+
+
 @csrf_exempt
 @require_POST
 def stripe_webhook(request):
@@ -57,7 +65,7 @@ def alby_webhook(request):
             return HttpResponse(status=200)
         fiat_in_cents = int(payload["fiat_in_cents"])
         # should be around $20 USD
-        if not 1800 < fiat_in_cents < 2200:
+        if not 1900 < fiat_in_cents < 2100:
             return HttpResponse(status=200)
         alby_payment = AlbyWebhook.objects.create(payload=payload)
         anon, created = Anon.objects.get_or_create(

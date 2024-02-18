@@ -16,6 +16,8 @@
     type="image/x-icon"
   />
 
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+
  <!-- Facebook meta tags -->
  <meta property="og:title" content="Selma" />
  <meta property="og:description" content="Selma is an AI assistant over email." />
@@ -35,25 +37,43 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
 
 {% tailwind_css %}
-<style>
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translate3D(0,30px,0);
-    }
-    to {
-        opacity: 1;
-        transform: translate3D(0,0px,0);
-    }
-}
-.fade-in {
-    animation: fadeInUp 0.75s forwards;
-}
-</style>
+<link href="{% static 'css/modal_helper.css' %}" rel="stylesheet" />
+</head>
 <body class="bg-gray-100" 
 hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
 > 
+<header class="container mx-auto px-6 py-4 w-full">
+    <nav class="flex justify-between">
+        <a  href="{% url 'home' %}">
+        <img src= "{% static 'img/logo_bg.png' %}" width="34px" height="34px" alt="logo" />
+        </a>
+        <div class="flex space-x-6">
+            <a class="text-gray-600 hover:text-gray-900" href="{% url 'about' %}">About</a>
+            <a class="text-gray-600 hover:text-gray-900" href="javascript:;" hx-get="{% url 'pricing' %}" hx-target="body" hx-swap="beforeend">Pricing</a>
+            <a class="text-gray-600 hover:text-gray-900" href="#">Contact</a>
+        </div>
+
+
+    </nav>
+</header>
+
   {% block content %} {% endblock %}
+
+<footer class="text-center text-gray-500 text-xs">
+    <div class="container mx-auto px-4 py-8">
+        <div class="flex justify-between items-center pb-4">
+            <div class="text-sm text-gray-600">
+                <a class="hover:text-gray-900" href="#">Terms of Service</a> <span class="mx-2">|</span>
+                <a class="hover:text-gray-900" href="#">Privacy Policy</a> <span class="mx-2">|</span>
+                <a class="hover:text-gray-900" href="#">Support</a>
+            </div>
+            <div class="text-gray-600 text-xs">
+            © {% now "Y" %} JTM Technologies. | Est. <a class="hover:text-gray-900" 
+            href="https://mempool.space/block/00000000000000000002aed1a5edf182b222bb718976de3265834d8e4b936545">830945</a>
+            </div>
+        </div>
+    </div>
+</footer>
 
   <script src="{% static 'js/htmx.min.js' %}" defer></script>
 

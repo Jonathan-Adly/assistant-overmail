@@ -1,31 +1,17 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-<header class="container mx-auto px-6 py-4 w-full">
-    <nav class="flex justify-between">
-        <img src= "{% static 'img/logo_bg.png' %}" width="34px" height="34px" alt="logo" />
-        <div class="flex space-x-6">
-            <a class="text-gray-600 hover:text-gray-900" href="#">About</a>
-            <a class="text-gray-600 hover:text-gray-900" href="#">Pricing</a>
-            <a class="text-gray-600 hover:text-gray-900" href="#">Contact</a>
+<div class="mt-8 pt-6">
+    <div class="flex justify-center">
+        <div class="bg-green-100 text-green-700 px-4 py-4 rounded-lg inline-flex items-center opacity-0"
+        _="on load wait 2s add .fade-in to me then remove .opacity-0 from me"
+        >
+            <span class="text-xs font-semibold mr-2">COMING SOON</span> Introducing Selma, A Multi-agent AI shared inbox for SaaS customer support
         </div>
-
-
-    </nav>
-
-    <div class="mt-8 pt-6">
-        <div class="flex justify-center">
-            <div class="bg-green-100 text-green-700 px-4 py-4 rounded-lg inline-flex items-center opacity-0"
-            _="on load wait 2s add .fade-in to me then remove .opacity-0 from me"
-            >
-                <span class="text-xs font-semibold mr-2">COMING SOON</span> Introducing Selma, A Multi-agent AI shared inbox for SaaS customer support
-                <a class="text-xs font-semibold ml-2" href="#">Learn more →</a>
-            </div>
-        </div>
-        
     </div>
-</header>
-<main class="container mx-auto px-6 mt-2 text-center mb-12">
+    
+</div>
+<main class="container mx-auto px-6 mt-2 text-center" style="height: 75vh;">
     <h1 class="text-4xl font-semibold text-gray-900 mb-6 opacity-0" id="header-text"
     _="on load add .fade-in to me then remove .opacity-0 from me">Create an AI assistant for your inbox</h1>
         <p class="text-lg text-gray-600 mb-12 opacity-0" id="sub-header-text"
@@ -35,20 +21,53 @@
             Receive responses seamlessly. Simple and flexible. Only pay for what you use.
          
         </p>
-<div class="flex justify-center items-center space-x-4 opacity-0" id="email-container"
-_= "on load wait 1s add .fade-in to me then remove .opacity-0 from me"
->
-    <input class="w-full md:w-1/2 py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Your Email" type="text" />
-    
-    <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg">
+    <div class="flex justify-center items-center space-x-4 opacity-0" id="email-container"
+    _= "on load wait 1s add .fade-in to me then remove .opacity-0 from me">
+        <input class="w-full md:w-1/2 py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+        placeholder="Your Email" type="text" />
+        <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg">
                 Create Assistant
-            </button>
-</div>
-<p class="text-green-500 mt-5 opacity-0"
-_= "on load wait 2.5s add .fade-in to me then remove .opacity-0 from me"
->Pricing: $20 per 200 emails</p>
+        </button>
+    </div>
+    <p class="text-green-500 mt-5 opacity-0"
+    _= "on load wait 2.5s add .fade-in to me then remove .opacity-0 from me">Pricing: $20 per 200 emails</p>
 </main>
+
 <hr>
+<div class="bg-white mx-auto px-6 py-6 w-full bg-50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="text-center">
+            <h1 class="text-4xl font-semibold">Unlock your new superpowers</h1>
+                <p class="mt-4 text-gray-600">
+                    Meet your new favourite productivity shortcut.<br/>
+                    On average, emails take 11.2 hours of the work week, let's cut that to 1. <br/>
+                    Simply forward your emails to <strong> assistant@getselma.ai</strong> with intstruction to the model.<br/>
+                    In a few seconds, you will receive a response. Send as is or edit as you like. You are in control.
+                </p>
+        </div>
+    </div>
+</div>
 
+<div class="bg-green-200">
+    <div class="max-w-4xl mx-auto py-16 text-center">
+        <h1 class="text-4xl font-bold text-gray-800 mb-4">Anonymous & Private</h1>
+        <p class="text-xl text-gray-600 mb-8">Pay with lightning. No Account Information Needed.</p>
+        <p class="text-gray-600 mb-8">Emails are processed & discarded. Use any email account, or even multiple. <br> 
+            Our GPT-4 instance is hosted on Azure with available BAA and HIPAA compliance. <br>
+        </p>
+    </div>
+</div>
 
+<div class="bg-white mx-auto px-6 py-6 w-full bg-50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="text-center">
+            <h1 class="text-4xl font-semibold">Work in your email. No blockers</h1>
+                <p class="mt-4 text-gray-600">
+                    Selma is totally private. It works like any other emails.<br/>
+                    Gmail, outlook, or any email client works with no special configurations. <br/>
+                    Like your own personal assistant, Selma is always there to help you.
+                </p>
+        </div>
+    </div>
+</div>
 {% endblock content %}
