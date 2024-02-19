@@ -43,8 +43,10 @@
               <span class="text-sm"><i class="fa fa-credit-card"></i></span>
             </button>
 
-            <button class="bg-green-500 text-white py-2 px-4 rounded-md mb-2 w-1/2 text-center flex justify-between items-center">
-              <!-- Click, create invoice, and show user LN qrCODE and invoice -->
+            <button class="bg-green-500 text-white py-2 px-4 rounded-md mb-2 w-1/2 text-center flex justify-between items-center"
+            hx-get="{% url 'alby_checkout' %}" hx-swap="outerHTML" hx-target="#checkout"
+            >
+     
               <span>Lightning</span>
               <span class="text-sm"><i class="fas fa-bolt"></i></span>
             </button>

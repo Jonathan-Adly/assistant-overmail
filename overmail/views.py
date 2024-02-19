@@ -26,7 +26,7 @@ def home(request):
         email = request.POST.get("email", "").lower()
         if email:
             request.session["email"] = email
-            return render(request, "accounts/payment.html", {"email": email})
+            return render(request, "overmail/payment.html", {"email": email})
         else:
             message = "Please enter a valid email address."
             messages.error(request, message)
@@ -52,7 +52,7 @@ def stripe_checkout(request):
     if not email:
         message = "Please enter a valid email address."
         messages.error(request, message)
-        return render(request, "accounts/home.html")
+        return render(request, "overmail/home.html")
 
     stripe.api_key = settings.STRIPE_SECRET_KEY
     try:
@@ -72,13 +72,53 @@ def stripe_checkout(request):
         public_key = settings.STRIPE_PUBLIC_KEY
         return render(
             request,
-            "accounts/stripe-checkout.html",
+            "overmail/stripe-checkout.html",
             {"stripe_public_key": public_key, "client_secret": client_secret},
         )
     except Exception as e:
         print(e)
         message = "Something went wrong. Please try again."
         return HttpResponse(message)
+
+
+def alby_checkout(request):
+    # goal is to create a lighting invoice and return the payment request with QR code to the frontend
+    # first we will get the current price of bitcoin
+    email = request.session.get("email")
+    if not email:
+        message = "Please enter a valid email address."
+        messages.error(request, message)
+        return render(request, "overmail/home.html")
+    bitcoin_price_api = "https://api.kraken.com/0/public/Trades?pair=XBTUSD&count=1"
+    bitcoin_price_usd = float(
+        requests.get(bitcoin_price_api).json()["result"]["XXBTZUSD"][0][0]
+    )
+    satoshis = int((20 / bitcoin_price_usd) * 100_000_000)
+    # then we will create a lightning invoice
+    albi_api = "https://api.getalby.com/invoices"
+    payload = {
+        "amount": satoshis,
+        "description": "200 emails of AI Assistant overmail",
+        "payer_email": email,
+    }
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {settings.ALBY_API_KEY}",
+    }
+    response = requests.post(albi_api, headers=headers, json=payload)
+    invoice = response.json()
+    qr_code = invoice["qr_code_svg"]
+    payment_request = invoice["payment_request"]
+    return render(
+        request,
+        "overmail/alby-checkout.html",
+        {
+            "qr_code": qr_code,
+            "payment_request": payment_request,
+            "bitcoin_price_usd": bitcoin_price_usd,
+            "sats": satoshis,
+        },
+    )
 
 
 @csrf_exempt

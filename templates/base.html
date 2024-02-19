@@ -15,7 +15,7 @@
     href="{% static 'img/logo_ico.ico' %}"
     type="image/x-icon"
   />
-
+<!-- Font Awesome -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
 
  <!-- Facebook meta tags -->
@@ -34,10 +34,15 @@
      content="An AI assistant over email." />
 
 <title>{% block title %} AI assistant over mail {% endblock title %}</title>
+
+<!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
 
+<!-- Tailwind CSS -->
 {% tailwind_css %}
 <link href="{% static 'css/modal_helper.css' %}" rel="stylesheet" />
+
+
 </head>
 <body class="bg-gray-100" 
 hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
