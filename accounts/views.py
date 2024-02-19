@@ -18,8 +18,12 @@ from .models import AlbyWebhook, Anon, CustomUser, EmailWebhook, StripeWebhook
 
 
 def home(request):
+    """Home page.
+    On POST save email in session and start payment process.
+    On GET render home home with conditional message if this is a redirect from a successful payment.
+    """
     if request.method == "POST":
-        email = request.POST.get("email", "")
+        email = request.POST.get("email", "").lower()
         if email:
             request.session["email"] = email
             return render(request, "accounts/payment.html", {"email": email})
@@ -28,6 +32,17 @@ def home(request):
             messages.error(request, message)
             return render(request, "accounts/home.html")
 
+    session_id = request.GET.get("session_id", "")
+    if session_id:
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        session = stripe.checkout.Session.retrieve(session_id)
+        if session.status == "complete":
+            message = "Thank you for your payment. You will receive a welcome email confirming your details."
+            messages.success(request, message)
+        else:
+            print(session)
+            message = "Something went wrong. Please try again."
+            messages.error(request, message)
     return render(request, "accounts/home.html")
 
 
@@ -43,12 +58,48 @@ def tos(request):
     return render(request, "accounts/tos.html")
 
 
+def stripe_checkout(request):
+    """Create a Stripe checkout session and return the client secret to the frontend."""
+    email = request.session.get("email").lower()
+    if not email:
+        message = "Please enter a valid email address."
+        messages.error(request, message)
+        return render(request, "accounts/home.html")
+
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+    try:
+        checkout_session = stripe.checkout.Session.create(
+            ui_mode="embedded",
+            line_items=[
+                {
+                    "price": f"{settings.STRIPE_PRICE_ID}",
+                    "quantity": 1,
+                },
+            ],
+            mode="payment",
+            customer_email=email,
+            return_url=settings.SITE_URL + "?session_id={CHECKOUT_SESSION_ID}",
+        )
+        client_secret = checkout_session.client_secret
+        public_key = settings.STRIPE_PUBLIC_KEY
+        return render(
+            request,
+            "accounts/stripe-checkout.html",
+            {"stripe_public_key": public_key, "client_secret": client_secret},
+        )
+    except Exception as e:
+        print(e)
+        message = "Something went wrong. Please try again."
+        return HttpResponse(message)
+
+
 @csrf_exempt
 @require_POST
 def stripe_webhook(request):
+    """Handle Stripe webhooks."""
     webhook_secret = settings.STRIPE_WH_SECRET
     signature = request.headers.get("stripe-signature")
-    stripe.api_key = settings.STRIPE_API_KEY
+    stripe.api_key = settings.STRIPE_SECRET_KEY
     try:
         event = stripe.Webhook.construct_event(
             payload=request.body, sig_header=signature, secret=webhook_secret
@@ -60,17 +111,24 @@ def stripe_webhook(request):
     data_object = event["data"]["object"]
     event_id = event["id"]
     try:
-        stripe_webhook = StripeWebhook.objects.create(
-            event_id=event_id, event_type=event_type
-        )
+        if event_type == "checkout.session.completed":
+            customer_email = data_object["customer_details"]["email"]
+            anon, created = Anon.objects.get_or_create(email=customer_email)
+            anon.emails_left += 200
+            anon.save()
+            stripe_webhook = StripeWebhook.objects.create(
+                event_id=event_id, event_type=event_type
+            )
     except Exception as e:
         print(e)
+
     return HttpResponse(status=200)
 
 
 @csrf_exempt
 @require_POST
 def alby_webhook(request):
+    """Handle Alby webhooks."""
     headers = request.headers
     payload = request.body
     try:

@@ -91,3 +91,12 @@
 	animation-duration:150ms;
 	animation-timing-function: ease;
 }
+
+
+.success {
+	background-color:#d1fae5;
+}
+
+.error {
+	background-color: #fee2e2;
+}

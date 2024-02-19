@@ -20,6 +20,10 @@ class Anon(models.Model):
     def __str__(self):
         return self.email
 
+    def save(self, *args, **kwargs):
+        self.email = self.email.lower()
+        super().save(*args, **kwargs)
+
 
 class StripeWebhook(models.Model):
     event_id = models.CharField(max_length=255, unique=True)

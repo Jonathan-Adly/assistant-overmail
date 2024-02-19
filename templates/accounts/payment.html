@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
+<script src="https://js.stripe.com/v3/"></script>
+<span id="stripe-checkout"></span>
 <main class="bg-gray-100">
   <div class="min-h-screen flex justify-center items-center">
     <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl mx-4">
@@ -32,11 +34,11 @@
 
         <!-- Right Side -->
         <div class="w-1/2 pl-4 secondary-bg-color rounded-lg">
-          <div class="flex flex-col items-center py-8" id="payment-box">
+          <div class="flex flex-col items-center py-8" id="checkout">
             <h2 class="text-2xl font-semibold mb-6 text-center">Select Payment Method</h2>
-            <button class="bg-green-500 text-white py-2 px-4 rounded-md mb-2 w-1/2 text-center flex justify-between items-center">
-              <!-- Click, create invoice, and show user Stripe Checkout -->
-              <span class="bg-green-700 text-xs py-1 px-2 rounded-full">+3.5%</span>
+            <button class="bg-green-500 text-white py-2 px-4 rounded-md mb-2 w-1/2 text-center flex justify-between items-center"
+            hx-get="{% url 'stripe_checkout' %}" hx-swap="outerHTML" hx-target="#stripe-checkout"
+            >
               <span>Card</span>
               <span class="text-sm"><i class="fa fa-credit-card"></i></span>
             </button>
@@ -56,5 +58,6 @@
     </div>
   </div>
 </main>
+
 {% endblock %}
 
