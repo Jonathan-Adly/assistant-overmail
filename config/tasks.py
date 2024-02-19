@@ -1,16 +1,8 @@
-from celery import shared_task
 from django.conf import settings
 from django.core.mail import EmailMessage, send_mail
 from django.core.management import call_command
 
 
-@shared_task
-def clean_up():
-    call_command("clearsessions")
-    return
-
-
-@shared_task
 def send_success_email(email):
     domain = settings.SITE_URL
     site_name = domain.split("//")[-1]

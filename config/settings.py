@@ -43,12 +43,15 @@ INSTALLED_APPS = [
     # 3rd party
     "allauth",
     "allauth.account",
-    "django_celery_beat",
     "whitenoise.runserver_nostatic",
-    "django_tailwind_cli",
     # local
     "overmail",
 ]
+
+if DEBUG:
+    INSTALLED_APPS += [
+        "django_tailwind_cli",
+    ]
 
 INTERNAL_IPS = [
     "127.0.0.1",
@@ -178,7 +181,7 @@ else:
 if not DEBUG:
     # sentry
     sentry_sdk.init(
-        dsn="https://34052e962c02492587540c790973a6e8@o758170.ingest.sentry.io/4504860459204608",
+        dsn="sentry_URL_here",
         integrations=[
             DjangoIntegration(),
         ],
@@ -189,62 +192,17 @@ if not DEBUG:
 
 # openai
 OPENAI_API_KEY = env("openai")
-
-# celery
-REDIS_URL = env("REDIS_URL")
-CELERY_BROKER_URL = env("REDIS_URL")
-CELERY_RESULT_BACKEND = env("REDIS_URL")
-CELERY_TASK_SERIALIZER = "json"
-CELERY_ACCEPT_CONTENT = ["json"]
-
-
-# redis cache
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": env("REDIS_URL"),
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        },
-    },
-}
-
-beat_scheduler = "django_celery_beat.schedulers:DatabaseScheduler"
-from celery.schedules import crontab
-
-CELERY_BEAT_SCHEDULE = {
-    # Runs every Sunday at 10pm
-    "clean_up_sessions": {
-        "task": "config.tasks.clean_up",
-        "schedule": crontab(day_of_week="sun", hour="22", minute="0"),
-    },
-}
-
-
 OPENAI_CLIENT = OpenAI(
     api_key=OPENAI_API_KEY,
 )
-DEFAULT_GOOD_MODEL = "gpt-3.5-turbo"
-DEFAULT_PREMIUM_MODEL = "gpt-4-turbo-preview"
-DEFAULT_EMBEDDING_MODEL = "text-embedding-3-large"
-
-DEFAULT_PREMIUM_CONFIG = {
+DEFAULT_MODEL = "gpt-4-turbo-preview"
+DEFAULT_CONFIG = {
     "temperature": 0.25,
     "max_tokens": 2000,
     "frequency_penalty": 0.5,
     "presence_penalty": 0,
-    "model": DEFAULT_PREMIUM_MODEL,
+    "model": DEFAULT_MODEL,
 }
-
-DEFAULT_GOOD_CONFIG = {
-    "temperature": 0.25,
-    "max_tokens": 2000,
-    "frequency_penalty": 0.5,
-    "presence_penalty": 0,
-    "model": DEFAULT_GOOD_MODEL,
-}
-
-DEFAULT_EMBEDDING_CONFIG = {"model": DEFAULT_EMBEDDING_MODEL, "dimensions": 1024}
 
 
 # allauth and sesame
