@@ -12,7 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from svix.webhooks import Webhook, WebhookVerificationError
 
-from config.tasks import bill_user, send_invitation_email
+from config.tasks import send_success_email
 
 from .models import AlbyWebhook, Anon, CustomUser, EmailWebhook, StripeWebhook
 
@@ -30,7 +30,7 @@ def home(request):
         else:
             message = "Please enter a valid email address."
             messages.error(request, message)
-            return render(request, "accounts/home.html")
+            return render(request, "overmail/home.html")
 
     session_id = request.GET.get("session_id", "")
     if session_id:
@@ -43,19 +43,7 @@ def home(request):
             print(session)
             message = "Something went wrong. Please try again."
             messages.error(request, message)
-    return render(request, "accounts/home.html")
-
-
-def about(request):
-    return render(request, "accounts/about.html")
-
-
-def pricing(request):
-    return render(request, "accounts/pricing.html")
-
-
-def tos(request):
-    return render(request, "accounts/tos.html")
+    return render(request, "overmail/home.html")
 
 
 def stripe_checkout(request):
@@ -169,3 +157,15 @@ def email_webhook(request):
     except json.JSONDecodeError:
         print(request.body)
         return HttpResponse(status=400)
+
+
+def about(request):
+    return render(request, "overmail/about.html")
+
+
+def pricing(request):
+    return render(request, "overmail/pricing.html")
+
+
+def tos(request):
+    return render(request, "overmail/tos.html")

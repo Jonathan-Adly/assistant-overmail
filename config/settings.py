@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     "whitenoise.runserver_nostatic",
     "django_tailwind_cli",
     # local
-    "accounts",
+    "overmail",
 ]
 
 INTERNAL_IPS = [
@@ -269,7 +269,7 @@ if DEBUG:
     ACCOUNT_DEFAULT_HTTP_PROTOCOL = "http"
 else:
     ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
-AUTH_USER_MODEL = "accounts.CustomUser"
+AUTH_USER_MODEL = "overmail.CustomUser"
 ACCOUNT_LOGOUT_ON_GET = True
 
 
