@@ -1,4 +1,5 @@
 import json
+from email.utils import parseaddr
 
 import requests
 import stripe
@@ -7,7 +8,6 @@ from django.contrib import messages
 from django.contrib.sessions.models import Session
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.utils.crypto import get_random_string
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from svix.webhooks import Webhook, WebhookVerificationError
@@ -184,19 +184,31 @@ def alby_webhook(request):
 @csrf_exempt
 @require_POST
 def email_webhook(request):
-    # check if the email it is sent from is in the database and the user is paid, and has emails left
-    # if so, decrement the email left and response back "got yoru email"
-    # if not, response with 200 and drop the email
-    # email = request.POST.get("from").split("<")[1].split(">")[0].strip()
-    # subject = request.POST.get("subject")
-    # message = request.POST.get("body-html")
-    try:
-        payload = json.loads(request.body)
-        EmailWebhook.objects.create(payload=payload)
+    """checks if the email it is sent from is in the database and the user is paid, and has emails left
+    if so, decrement the email left, process, and send a response with the result
+    if not, response with 200 and drop the email. Letting the user know they need to pay
+    """
+    from_email = parseaddr(request.POST.get("from"))[1]
+    subject = request.POST.get("subject")
+    message = request.POST.get("body-plain")
+    print(from_email, subject, message)
+    anon = Anon.objects.filter(email=from_email).first()
+    if not anon:
+        # send email to anon, telling them to pay
+        print("anon not found")
+        # TODO
         return HttpResponse(status=200)
-    except json.JSONDecodeError:
-        print(request.body)
-        return HttpResponse(status=400)
+    if not anon.emails_left:
+        # TODO
+        # send email to anon, telling them to pay
+        print("no emails left")
+        return HttpResponse(status=200)
+
+    # process the email and send a response to anon with the result
+    anon.emails_left -= 1
+    anon.save()
+    # TODO
+    return HttpResponse(status=200)
 
 
 def about(request):
