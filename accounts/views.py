@@ -3,6 +3,8 @@ import json
 import requests
 import stripe
 from django.conf import settings
+from django.contrib import messages
+from django.contrib.sessions.models import Session
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.utils.crypto import get_random_string
@@ -16,6 +18,16 @@ from .models import AlbyWebhook, Anon, CustomUser, EmailWebhook, StripeWebhook
 
 
 def home(request):
+    if request.method == "POST":
+        email = request.POST.get("email", "")
+        if email:
+            request.session["email"] = email
+            return render(request, "accounts/payment.html", {"email": email})
+        else:
+            message = "Please enter a valid email address."
+            messages.error(request, message)
+            return render(request, "accounts/home.html")
+
     return render(request, "accounts/home.html")
 
 
@@ -25,6 +37,10 @@ def about(request):
 
 def pricing(request):
     return render(request, "accounts/pricing.html")
+
+
+def tos(request):
+    return render(request, "accounts/tos.html")
 
 
 @csrf_exempt

@@ -19,21 +19,21 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
 
  <!-- Facebook meta tags -->
- <meta property="og:title" content="Selma" />
- <meta property="og:description" content="Selma is an AI assistant over email." />
+ <meta property="og:title" content="AI assistant over mail" />
+ <meta property="og:description" content="An AI assistant over email." />
  <meta property="og:image" content="{% static 'img/logo_bg.png' %}" />
 
  <!-- Twitter meta tags -->
  <meta name="twitter:card" content="summary_large_image" />
- <meta name="twitter:title" content="Selma" />
- <meta name="twitter:description" content="Selma is an AI assistant over email." />
+ <meta name="twitter:title" content="Ai assistant over mail" />
+ <meta name="twitter:description" content="An AI assistant over email." />
  <meta name="twitter:image" content="{% static 'img/logo_bg.png' %}" />
 
  <!-- Search engine meta tags -->
  <meta name="description"
-     content="Selma is a AI assistant over email." />
+     content="An AI assistant over email." />
 
-<title>{% block title %} Selma {% endblock title %}</title>
+<title>{% block title %} AI assistant over mail {% endblock title %}</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
 
 {% tailwind_css %}
@@ -42,6 +42,16 @@
 <body class="bg-gray-100" 
 hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
 > 
+{% if messages %}
+<div class="flex items-center justify-between p-3 rounded-md bg-red-100 gap-4" role="alert" id="alert">
+    {% for message in messages %}
+    <p> {{ message }} </p>
+    <button type="button" 
+    _="on click hide #alert"
+    class="flex items-center justify-center rounded-full transition-all duration-300 p-1.5 hover:bg-black/10" data-dismiss="alert" aria-label="Close"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line> <line x1="6" y1="6" x2="18" y2="18"></line> </svg></button>
+    {% endfor %}
+</div>
+{% endif %}
 <header class="container mx-auto px-6 py-4 w-full">
     <nav class="flex justify-between">
         <a  href="{% url 'home' %}">
@@ -50,7 +60,14 @@ hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
         <div class="flex space-x-6">
             <a class="text-gray-600 hover:text-gray-900" href="{% url 'about' %}">About</a>
             <a class="text-gray-600 hover:text-gray-900" href="javascript:;" hx-get="{% url 'pricing' %}" hx-target="body" hx-swap="beforeend">Pricing</a>
-            <a class="text-gray-600 hover:text-gray-900" href="#">Contact</a>
+            <a class="text-gray-600 hover:text-gray-900" href="mailto:hello@overmail.ai">Contact</a>
+        </div>
+
+        <div class="flex space-x-4 hidden md:block">
+
+            <a class="github-button" href="https://github.com/jonathan-adly/assistant-overmail" 
+            data-color-scheme="no-preference: light; light: light; dark: dark;" 
+            data-size="large" data-show-count="false" aria-label="Star jonathan-adly/assistant-overmail on GitHub">Star</a>
         </div>
 
 
@@ -63,9 +80,9 @@ hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
     <div class="container mx-auto px-4 py-8">
         <div class="flex justify-between items-center pb-4">
             <div class="text-sm text-gray-600">
-                <a class="hover:text-gray-900" href="#">Terms of Service</a> <span class="mx-2">|</span>
-                <a class="hover:text-gray-900" href="#">Privacy Policy</a> <span class="mx-2">|</span>
-                <a class="hover:text-gray-900" href="#">Support</a>
+                <a class="hover:text-gray-900" href="{% url 'tos' %}">Terms of Service</a> <span class="mx-2">|</span>
+                <a class="hover:text-gray-900" href="https://github.com/Jonathan-Adly/assistant-overmail" target="_blank">Github</a> <span class="mx-2">|</span>
+                <a class="hover:text-gray-900" href="emailto:hello@overmail.ai">Support</a>
             </div>
             <div class="text-gray-600 text-xs">
             © {% now "Y" %} JTM Technologies. | Est. <a class="hover:text-gray-900" 
@@ -78,5 +95,7 @@ hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
   <script src="{% static 'js/htmx.min.js' %}" defer></script>
 
   <script src="{% static 'js/hyperscript.min.js'%}" defer></script>
+
+<script async defer src="https://buttons.github.io/buttons.js"></script>
  
  </body>
