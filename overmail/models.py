@@ -41,11 +41,5 @@ class StripeWebhook(models.Model):
 
 
 class AlbyWebhook(models.Model):
-    # json field
-    payload = models.JSONField()
-    received_at = models.DateTimeField(auto_now_add=True)
-
-
-class EmailWebhook(models.Model):
     payload = models.JSONField()
     received_at = models.DateTimeField(auto_now_add=True)

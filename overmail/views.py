@@ -1,6 +1,7 @@
 import json
 from email.utils import parseaddr
 
+import openai
 import requests
 import stripe
 from django.conf import settings
@@ -10,11 +11,16 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+from markdown import markdown
 from svix.webhooks import Webhook, WebhookVerificationError
 
-from config.tasks import send_success_email
+from overmail.email_utils import (
+    send_assistant_email,
+    send_help_email,
+    send_success_email,
+)
 
-from .models import AlbyWebhook, Anon, CustomUser, EmailWebhook, StripeWebhook
+from .models import AlbyWebhook, Anon, CustomUser, StripeWebhook
 
 
 def home(request):
@@ -82,7 +88,7 @@ def stripe_checkout(request):
 
 
 def alby_checkout(request):
-    # goal is to create a lighting invoice and return the payment request with QR code to the frontend
+    """Create a lighting invoice and return the payment request with QR code to the frontend"""
     # first we will get the current price of bitcoin
     email = request.session.get("email")
     if not email:
@@ -134,6 +140,7 @@ def stripe_webhook(request):
         )
     except Exception as e:
         print(e)
+        return HttpResponse(status=400)
 
     event_type = event["type"]
     data_object = event["data"]["object"]
@@ -147,8 +154,11 @@ def stripe_webhook(request):
             stripe_webhook = StripeWebhook.objects.create(
                 event_id=event_id, event_type=event_type
             )
+            send_success_email(customer_email)
+            return HttpResponse(status=200)
     except Exception as e:
         print(e)
+        return HttpResponse(status=400)
 
     return HttpResponse(status=200)
 
@@ -164,9 +174,10 @@ def alby_webhook(request):
         msg = wh.verify(payload, headers)
         payload = json.loads(request.body)
         if not payload["payer_email"]:
+            # madlads who drop sats to random addresses
             return HttpResponse(status=200)
         fiat_in_cents = int(payload["fiat_in_cents"])
-        # should be around $20 USD
+        # should be around $20 USD. This is a simple check to make sure the payment is correct.
         if not 1900 < fiat_in_cents < 2100:
             return HttpResponse(status=200)
         alby_payment = AlbyWebhook.objects.create(payload=payload)
@@ -175,6 +186,7 @@ def alby_webhook(request):
         )
         anon.emails_left += 200
         anon.save()
+        send_success_email(alby_payment.payload["payer_email"])
         return HttpResponse(status=200)
     except json.JSONDecodeError or WebhookVerificationError:
         print(request.body)
@@ -184,30 +196,47 @@ def alby_webhook(request):
 @csrf_exempt
 @require_POST
 def email_webhook(request):
-    """checks if the email it is sent from is in the database and the user is paid, and has emails left
+    """
+    Handles when the server receives an email from the user.
+    checks if the email it is sent from is in the database and the user is paid, and has emails left
     if so, decrement the email left, process, and send a response with the result
     if not, response with 200 and drop the email. Letting the user know they need to pay
     """
-    from_email = parseaddr(request.POST.get("from"))[1]
+    from_email = parseaddr(request.POST.get("From"))[1]
     subject = request.POST.get("subject")
     message = request.POST.get("body-plain")
-    print(from_email, subject, message)
+
     anon = Anon.objects.filter(email=from_email).first()
     if not anon:
-        # send email to anon, telling them to pay
-        print("anon not found")
-        # TODO
+        send_help_email(from_email, reason="email not found")
         return HttpResponse(status=200)
     if not anon.emails_left:
-        # TODO
-        # send email to anon, telling them to pay
-        print("no emails left")
+        send_help_email(from_email, reason="no emails left")
         return HttpResponse(status=200)
 
     # process the email and send a response to anon with the result
+    client = settings.OPENAI_CLIENT
+    config = settings.DEFAULT_CONFIG
+    prompt = """
+    You are a helpful assistant that helps people with their emails. 
+    You are given a subject and a message with or without user instructions. 
+    Do your best with a helpful response. Respond in markdown.\n
+    Here is an example: \n
+    Subject: "Thank you note" \n
+    Message: "Write 2-3 sentences to thank my interviewer, reiterating my excitement for the job opportunity while keeping it cool. Don't make it too formal." \n
+    Assistant: Thanks a lot for the great conversation today! I'm genuinely excited about the opportunity to bring my skills to your team and see what we can achieve together. Looking forward to possibly working together! \n
+    """
+    completion = client.chat.completions.create(
+        **config,
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": f"Subject: {subject}\nMessage: {message}"},
+        ],
+    )
+    response = completion.choices[0].message.content
     anon.emails_left -= 1
     anon.save()
-    # TODO
+    send_assistant_email(from_email, response)
     return HttpResponse(status=200)
 
 
