@@ -44,14 +44,11 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "whitenoise.runserver_nostatic",
+    "django_tailwind_cli",
     # local
     "overmail",
 ]
 
-if DEBUG:
-    INSTALLED_APPS += [
-        "django_tailwind_cli",
-    ]
 
 INTERNAL_IPS = [
     "127.0.0.1",
