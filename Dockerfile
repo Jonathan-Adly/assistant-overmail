@@ -10,10 +10,6 @@ ENV PYTHONUNBUFFERED 1
 # Set work directory
 WORKDIR /code
 
-#upgrade pip
-#RUN pip install --upgrade pip
-# Install gcc
-#RUN apt-get update && apt-get install gcc -y
 
 # Install dependencies
 COPY ./requirements.txt .
@@ -21,3 +17,4 @@ RUN pip install -r requirements.txt
 
 # Copy project
 COPY . .
+RUN chmod +x /code/release.sh

@@ -1,0 +1,32 @@
+name: Deploy to development
+
+on:
+  #push:
+    #branches: [ main ]
+  workflow_dispatch:  
+jobs:
+  Deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4 
+      - name: Build & Deploy
+        env:
+            PRIVATE_KEY: ${{ secrets.EC2_PRIVATE_SSH }}
+            HOSTNAME: $ {{ secrets.EC2_HOSTNAME }}
+            USER_NAME: ec2-user
+
+        run: |
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+
+              # Now we have got the access of EC2 and we will start the deploy .
+              cd overmail &&
+              git checkout main &&
+              git fetch --all &&
+              git reset --hard origin/main &&
+              git pull origin main &&
+              docker-compose -f docker-compose-prod.yml down &&
+              docker-compose -f docker-compose-prod.yml up -d --build 
+          '
