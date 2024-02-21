@@ -38,7 +38,7 @@ def add_email(request):
             "Authorization": settings.OPENNODE_SECRET_KEY,
         }
         data = {
-            "amount": 1,
+            "amount": 20,
             "currency": "USD",
             "description": f"{email}",
             "callback_url": "https://api.overmail.ai/opennode-webhook/",
@@ -110,14 +110,13 @@ def opennode_webhook(request):
     received = request.POST.get("hashed_order")
     charge_id = request.POST.get("id")
     status = request.POST.get("status")
+    net_fiat_value = int(request.POST.get("net_fiat_value")) * 100
     calculated = hmac.new(
         api_key, msg=charge_id.encode(), digestmod=hashlib.sha256
     ).hexdigest()
     if received == calculated:
         # Signature is valid
-        # print request body for debugging
-        print(request.body)
-        if status == "paid":
+        if status == "paid" and net_fiat_value >= 1900:
             email = request.POST.get("description").lower()
             anon, created = Anon.objects.get_or_create(email=email)
             anon.emails_left += 200
@@ -125,6 +124,7 @@ def opennode_webhook(request):
             opennode_webhook = OpenNodeWebhook.objects.create(
                 charge_id=charge_id, status=status, description=description
             )
+            send_success_email(email)
             return HttpResponse(status=200)
 
         return HttpResponse("Signature is valid.", status=200)
