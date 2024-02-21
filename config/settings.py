@@ -1,7 +1,9 @@
 from pathlib import Path
 
+import sentry_sdk
 from environs import Env
 from openai import OpenAI
+from sentry_sdk.integrations.django import DjangoIntegration
 
 env = Env()
 env.read_env()
@@ -174,18 +176,19 @@ else:
     EMAIL_USE_TLS = True
 
 
-"""
-if not DEBUG:
+SENTRY = env("SENTRY", default=None)
+
+if SENTRY:
     # sentry
     sentry_sdk.init(
-        dsn="sentry_URL_here",
+        dsn="https://7867c9d8bce4901c71d72656b75d000f@o758170.ingest.sentry.io/4506782695424000",
         integrations=[
             DjangoIntegration(),
         ],
         traces_sample_rate=0.1,
         send_default_pii=True,
     )
-"""
+
 
 # openai
 OPENAI_API_KEY = env("openai")
@@ -233,7 +236,3 @@ STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY")
 STRIPE_PUBLIC_KEY = env("STRIPE_PUBLIC_KEY")
 STRIPE_WH_SECRET = env("STRIPE_WH_SECRET")
 STRIPE_PRICE_ID = env("STRIPE_PRICE_ID")
-
-# alby
-ALBY_WH_SECRET = env("ALBY_WH_SECRET")
-ALBY_API_KEY = env("ALBY_API_KEY")
