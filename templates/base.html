@@ -64,8 +64,8 @@ hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
         <img src= "{% static 'img/logo_bg.png' %}" width="34px" height="34px" alt="logo" />
         </a>
         <div class="flex space-x-6">
-            <a class="text-gray-600 hover:text-gray-900" href="{% url 'about' %}">About</a>
-            <a class="text-gray-600 hover:text-gray-900" href="javascript:;" hx-get="{% url 'pricing' %}" hx-target="body" hx-swap="beforeend">Pricing</a>
+            <a class="text-gray-600 hover:text-gray-900" href="#">About</a>
+            <a class="text-gray-600 hover:text-gray-900" href="#" hx-target="body" hx-swap="beforeend">Pricing</a>
             <a class="text-gray-600 hover:text-gray-900" href="mailto:hello@overmail.ai">Contact</a>
         </div>
 
@@ -86,7 +86,7 @@ hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
     <div class="container mx-auto px-4 py-8">
         <div class="flex justify-between items-center pb-4">
             <div class="text-sm text-gray-600">
-                <a class="hover:text-gray-900" href="{% url 'tos' %}">Terms of Service</a> <span class="mx-2">|</span>
+                <a class="hover:text-gray-900" href="#">Terms of Service</a> <span class="mx-2">|</span>
                 <a class="hover:text-gray-900" href="https://github.com/Jonathan-Adly/assistant-overmail" target="_blank">Github</a> <span class="mx-2">|</span>
                 <a class="hover:text-gray-900" href="emailto:hello@overmail.ai">Support</a>
             </div>

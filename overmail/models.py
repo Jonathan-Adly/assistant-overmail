@@ -38,8 +38,3 @@ class StripeWebhook(models.Model):
         stripe.api_key = settings.STRIPE_SECRET_KEY
         stripe_response = stripe.Event.retrieve(event_id)
         return str(stripe_response)
-
-
-class AlbyWebhook(models.Model):
-    payload = models.JSONField()
-    received_at = models.DateTimeField(auto_now_add=True)
