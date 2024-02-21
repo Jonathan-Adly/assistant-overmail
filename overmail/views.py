@@ -23,6 +23,26 @@ from overmail.email_utils import (
 from .models import AlbyWebhook, Anon, CustomUser, StripeWebhook
 
 
+@csrf_exempt
+@require_POST
+def add_email(request):
+    email = request.POST.get("email", "").lower()
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+    checkout_session = stripe.checkout.Session.create(
+        line_items=[
+            {
+                "price": f"{settings.STRIPE_PRICE_ID}",
+                "quantity": 1,
+            },
+        ],
+        mode="payment",
+        customer_email=email,
+        success_url=settings.SITE_URL + "?success",
+        cancel_url=YOUR_DOMAIN + "?cancel",
+    )
+    return redirect(checkout_session.url, code=303)
+
+
 def home(request):
     """Home page.
     On POST save email in session and start payment process.
