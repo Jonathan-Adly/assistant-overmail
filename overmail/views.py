@@ -110,19 +110,19 @@ def opennode_webhook(request):
     received = request.POST.get("hashed_order")
     charge_id = request.POST.get("id")
     status = request.POST.get("status")
-    net_fiat_value = int(request.POST.get("net_fiat_value")) * 100
+    net_fiat_value = float(request.POST.get("net_fiat_value")) * 100
     calculated = hmac.new(
         api_key, msg=charge_id.encode(), digestmod=hashlib.sha256
     ).hexdigest()
     if received == calculated:
         # Signature is valid
-        if status == "paid" and net_fiat_value >= 1900:
+        if status == "paid" and int(net_fiat_value) >= 1900:
             email = request.POST.get("description").lower()
             anon, created = Anon.objects.get_or_create(email=email)
             anon.emails_left += 200
             anon.save()
             opennode_webhook = OpenNodeWebhook.objects.create(
-                charge_id=charge_id, status=status, description=description
+                charge_id=charge_id, status=status, description=email
             )
             send_success_email(email)
             return HttpResponse(status=200)
