@@ -38,3 +38,13 @@ class StripeWebhook(models.Model):
         stripe.api_key = settings.STRIPE_SECRET_KEY
         stripe_response = stripe.Event.retrieve(event_id)
         return str(stripe_response)
+
+
+class OpenNodeWebhook(models.Model):
+    charge_id = models.CharField(max_length=255)
+    status = models.CharField(max_length=255)
+    description = models.TextField()
+    received_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.charge_id

@@ -1,6 +1,9 @@
+import hashlib
+import hmac
 from email.utils import parseaddr
 
 import openai
+import requests
 import stripe
 from django.conf import settings
 from django.http import HttpResponse
@@ -15,7 +18,7 @@ from overmail.email_utils import (
     send_success_email,
 )
 
-from .models import Anon, CustomUser, StripeWebhook
+from .models import Anon, CustomUser, OpenNodeWebhook, StripeWebhook
 
 
 def home(request):
@@ -27,6 +30,25 @@ def home(request):
 @require_POST
 def add_email(request):
     email = request.POST.get("your-email", "").lower()
+    use_bitcoin = request.POST.get("use-bitcoin", False)
+    if use_bitcoin:
+        url = "https://api.opennode.com/v1/charges"
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": settings.OPENNODE_SECRET_KEY,
+        }
+        data = {
+            "amount": 1,
+            "currency": "USD",
+            "description": f"{email}",
+            "callback_url": "https://api.overmail.ai/opennode-webhook/",
+            "success_url": "https://overmail.ai/?success",
+            "auto_settle": False,
+        }
+        response = requests.post(url, headers=headers, json=data)
+        charge = response.json()["data"]
+        hosted_checkout_url = charge["hosted_checkout_url"] + "?ln=1"
+        return redirect(hosted_checkout_url, code=303)
     stripe.api_key = settings.STRIPE_SECRET_KEY
     checkout_session = stripe.checkout.Session.create(
         line_items=[
@@ -78,6 +100,37 @@ def stripe_webhook(request):
         return HttpResponse(status=400)
 
     return HttpResponse(status=200)
+
+
+@csrf_exempt
+@require_POST
+def opennode_webhook(request):
+    """Handle OpenNode webhooks."""
+    api_key = settings.OPENNODE_SECRET_KEY.encode()
+    received = request.POST.get("hashed_order")
+    charge_id = request.POST.get("id")
+    status = request.POST.get("status")
+    calculated = hmac.new(
+        api_key, msg=charge_id.encode(), digestmod=hashlib.sha256
+    ).hexdigest()
+    if received == calculated:
+        # Signature is valid
+        # print request body for debugging
+        print(request.body)
+        if status == "paid":
+            email = request.POST.get("description").lower()
+            anon, created = Anon.objects.get_or_create(email=email)
+            anon.emails_left += 200
+            anon.save()
+            opennode_webhook = OpenNodeWebhook.objects.create(
+                charge_id=charge_id, status=status, description=description
+            )
+            return HttpResponse(status=200)
+
+        return HttpResponse("Signature is valid.", status=200)
+    else:
+        # Signature is invalid. Ignore the request.
+        return HttpResponse("Signature is invalid.", status=400)
 
 
 @csrf_exempt
