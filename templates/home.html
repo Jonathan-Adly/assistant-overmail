@@ -1,75 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-<div class="mt-8 pt-6">
-    <div class="flex justify-center">
-        <div class="bg-green-100 text-green-700 px-4 py-4 rounded-lg inline-flex items-center opacity-0"
-        _="on load wait 2s add .fade-in to me then remove .opacity-0 from me"
-        >
-            <span class="text-xs font-semibold mr-2">COMING SOON</span> Introducing Selma, A Multi-agent AI shared inbox for SaaS customer support
-        </div>
-    </div>
-    
-</div>
 <main class="container mx-auto px-6 mt-2 text-center" style="height: 75vh;">
     <h1 class="text-4xl font-semibold text-gray-900 mb-6 opacity-0" id="header-text"
-    _="on load add .fade-in to me then remove .opacity-0 from me">Create an AI assistant for your inbox</h1>
-        <p class="text-lg text-gray-600 mb-12 opacity-0" id="sub-header-text"
-        _="on load wait 0.5s then add .fade-in to me then remove .opacity-0 from me"
-        >
-            Set up an email assistant powered by GPT-4 in seconds. Send your emails to <strong> {{ GPT4_EMAIL }}</strong>.<br/>
-            Receive responses seamlessly. Simple and flexible. Only pay for what you use.
-         
-        </p>
-        <form method="POST" action="{% url 'add_email' %}">
-            <div class="flex justify-center items-center space-x-4 opacity-0" id="email-container"
-            _= "on load wait 1s add .fade-in to me then remove .opacity-0 from me">
-                {% csrf_token %}
-                <input required class="w-full md:w-1/2 py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
-                placeholder="Your Email" type="text"  name= "your-email" />
-                <button type="submit"  class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg">
-                    Create Assistant
-                </button>
-            </div>
-        </form>
-    <p class="text-green-500 mt-5 opacity-0"
-    _= "on load wait 2.5s add .fade-in to me then remove .opacity-0 from me">Pricing: $20 per 200 emails</p>
+    _="on load add .fade-in to me then remove .opacity-0 from me">Your installation works!</h1>
 </main>
 
-<hr>
-<div class="bg-white mx-auto px-6 py-6 w-full bg-50">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="text-center">
-            <h1 class="text-4xl font-semibold">Unlock your new superpowers</h1>
-                <p class="mt-4 text-gray-600">
-                    Meet your new favourite productivity shortcut.<br/>
-                    Simply forward your emails to <strong> {{GPT4_EMAIL}}</strong> with intstruction to the model.<br/>
-                    In a few seconds, you will receive a response. Send as is or edit as you like. You are in control.
-                </p>
-        </div>
-    </div>
-</div>
 
-<div class="bg-green-200">
-    <div class="max-w-4xl mx-auto py-16 text-center">
-        <h1 class="text-4xl font-bold text-gray-800 mb-4">Anonymous & Private</h1>
-        <p class="text-xl text-gray-600 mb-8">Pay with lightning. No Account Information Needed.</p>
-        <p class="text-gray-600 mb-8">Emails are processed & discarded. No logins or signup needed. Use any email account, or even multiple. <br> 
-            We're Open-Source, so you don't have to take our word for it.
-        </p>
-    </div>
-</div>
-
-<div class="bg-white mx-auto px-6 py-6 w-full bg-50">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="text-center">
-            <h1 class="text-4xl font-semibold">Work in your email. No blockers</h1>
-                <p class="mt-4 text-gray-600">
-                    Our service is totally private. It works like any other emails.<br/>
-                    Gmail, outlook, or any email client works with no special configurations. <br>
-                    <strong> We don't see or store your emails. </strong>
-                </p>
-        </div>
-    </div>
-</div>
 {% endblock content %}
