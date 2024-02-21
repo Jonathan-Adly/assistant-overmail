@@ -8,7 +8,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.sessions.models import Session
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from markdown import markdown
@@ -26,7 +26,7 @@ from .models import AlbyWebhook, Anon, CustomUser, StripeWebhook
 @csrf_exempt
 @require_POST
 def add_email(request):
-    email = request.POST.get("email", "").lower()
+    email = request.POST.get("your-email", "").lower()
     stripe.api_key = settings.STRIPE_SECRET_KEY
     checkout_session = stripe.checkout.Session.create(
         line_items=[
@@ -38,7 +38,7 @@ def add_email(request):
         mode="payment",
         customer_email=email,
         success_url=settings.SITE_URL + "?success",
-        cancel_url=YOUR_DOMAIN + "?cancel",
+        cancel_url=settings.SITE_URL + "?cancel",
     )
     return redirect(checkout_session.url, code=303)
 
@@ -174,6 +174,7 @@ def stripe_webhook(request):
             stripe_webhook = StripeWebhook.objects.create(
                 event_id=event_id, event_type=event_type
             )
+
             send_success_email(customer_email)
             return HttpResponse(status=200)
     except Exception as e:

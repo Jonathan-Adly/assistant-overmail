@@ -26,7 +26,7 @@ class Anon(models.Model):
 
 
 class StripeWebhook(models.Model):
-    event_id = models.CharField(max_length=255, unique=True)
+    event_id = models.CharField(max_length=255)
     event_type = models.CharField(max_length=255)
     received_at = models.DateTimeField(auto_now_add=True)
 

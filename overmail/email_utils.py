@@ -8,7 +8,7 @@ def send_success_email(email):
     subject = f"Your {site_name} Assistant is ready to go!"
     msg = (
         f"<p> Your {site_name} assistant was created successfully. You now have 200 emails! </p>"
-        f"<p> You can now email {settings.GPT4_email} using this email and responses will come back. </p>"
+        f"<p> You can now email {settings.GPT4_EMAIL} using this email and responses will come back. </p>"
         f"<p> For example, forward a colleage email with instruction craft an appropriate response"
         "or a customer email giving the model additional instruction. GPT-4 is pretty smart, "
         "and can figure out the task with minimal directions. </p>"
