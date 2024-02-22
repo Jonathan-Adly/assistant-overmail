@@ -145,6 +145,13 @@ def email_webhook(request):
     from_email = parseaddr(request.POST.get("From"))[1]
     subject = request.POST.get("subject")
     message = request.POST.get("body-plain")
+    # if it is a response to a previous email, remove the previous email header/footer
+    marker = "Response:"
+    end_marker = "If you have any questions, please don't hesitate to ask. Email us at"
+    if marker in message:
+        message = message.split(marker)[1].strip()
+        message = message.split(end_marker)[0].strip()
+        message = subject + "\n" + message
 
     anon = Anon.objects.filter(email=from_email).first()
     if not anon:
@@ -176,5 +183,5 @@ def email_webhook(request):
     response = completion.choices[0].message.content
     anon.emails_left -= 1
     anon.save()
-    send_assistant_email(from_email, response)
+    send_assistant_email(from_email, response, subject)
     return HttpResponse(status=200)
