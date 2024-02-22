@@ -6,6 +6,10 @@ You can use this to use GPT-4 privately, go around employers' blocks, or simply 
 
 For self-hosting. You will need Docker and Docker Compose for easy setup and deployment. The app integrates with Stripe for fiat payments, OpenNode for Bitcoin payments, and any mailing provider such mailgun, sendgrid, or AWS SES.
 
+## **Updates**
+
+- 2/22/24: You can now respond to the Assistant email for follow up on requests
+
 
 ## **Installation**
 

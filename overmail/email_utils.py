@@ -65,7 +65,7 @@ def send_assistant_email(email, response):
         f"<p> Your {site_name} assistant has a response for you. Response: </p>"
         f"<p> {response} </p>"
         f"<hr>"
-        f"<p> If you have any questions, please don't hesitate to ask. Simply respond to this email. </p>"
+        f"<p> If you have any questions, please don't hesitate to ask. Email us at {settings.DEFAULT_FROM_EMAIL}. </p>"
         f"<p> Thank you, </p>"
         f"<p> The {site_name} team </p>"
     )
@@ -73,7 +73,7 @@ def send_assistant_email(email, response):
     email = EmailMessage(
         subject,
         msg,
-        settings.DEFAULT_FROM_EMAIL,
+        settings.GPT4_EMAIL,
         [to],
     )
     email.content_subtype = "html"
