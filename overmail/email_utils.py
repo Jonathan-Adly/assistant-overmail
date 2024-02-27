@@ -57,13 +57,14 @@ def send_help_email(email, reason=None):
     return None
 
 
-def send_assistant_email(email, response, subject):
+def send_assistant_email(email, response, subject, message):
     domain = settings.SITE_URL
     site_name = domain.split("//")[-1]
     subject = f"RE: {subject}"
     msg = (
-        f"<p> Your {site_name} assistant has a response for you. Response: </p> <hr>"
-        f"<p> {response} </p>"
+        f"<p> Your {site_name} assistant has a response for you. Response: </p>"
+        f"<p> Your message: subject: {subject} <br> Message: {message} </p> <hr>"
+        f"<p> Assistant: {response} </p>"
         f"<hr>"
         f"<p> If you have any questions, please don't hesitate to ask. Email us at {settings.DEFAULT_FROM_EMAIL}. </p>"
         f"<p> Thank you, </p>"

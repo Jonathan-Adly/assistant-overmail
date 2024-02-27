@@ -145,14 +145,6 @@ def email_webhook(request):
     from_email = parseaddr(request.POST.get("From"))[1]
     subject = request.POST.get("subject")
     message = request.POST.get("body-plain")
-    # if it is a response to a previous email, remove the previous email header/footer
-    marker = "Response:"
-    end_marker = "If you have any questions, please don't hesitate to ask. Email us at"
-    if marker in message:
-        message = message.split(marker)[1].strip()
-        message = message.split(end_marker)[0].strip()
-        message = subject + "\n" + message
-
     anon = Anon.objects.filter(email=from_email).first()
     if not anon:
         send_help_email(from_email, reason="email not found")
@@ -167,7 +159,9 @@ def email_webhook(request):
     prompt = """
     You are a helpful assistant that helps people with their emails. 
     You are given a subject and a message with or without user instructions. 
-    Do your best with a helpful response. Respond in markdown.\n
+    Do your best with a helpful response. 
+    The message could be spanning a thread of emails with assistant being part of the conversation.
+    Respond in markdown.\n
     Here is an example: \n
     Subject: "Thank you note" \n
     Message: "Write 2-3 sentences to thank my interviewer, reiterating my excitement for the job opportunity while keeping it cool. Don't make it too formal." \n
@@ -184,5 +178,5 @@ def email_webhook(request):
     response = markdown(response)
     anon.emails_left -= 1
     anon.save()
-    send_assistant_email(from_email, response, subject)
+    send_assistant_email(from_email, response, subject, message)
     return HttpResponse(status=200)
