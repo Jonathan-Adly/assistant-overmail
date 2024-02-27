@@ -8,6 +8,8 @@ For self-hosting. You will need Docker and Docker Compose for easy setup and dep
 
 ## **Updates**
 
+- 2/27/25: Response now come back in markdown
+
 - 2/22/24: You can now respond to the Assistant email for follow up on requests
 
 

@@ -181,6 +181,7 @@ def email_webhook(request):
         ],
     )
     response = completion.choices[0].message.content
+    response = markdown(response)
     anon.emails_left -= 1
     anon.save()
     send_assistant_email(from_email, response, subject)
