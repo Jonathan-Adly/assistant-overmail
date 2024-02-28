@@ -181,7 +181,7 @@ SENTRY = env("SENTRY", default=None)
 if SENTRY:
     # sentry
     sentry_sdk.init(
-        dsn="https://7867c9d8bce4901c71d72656b75d000f@o758170.ingest.sentry.io/4506782695424000",
+        dsn=SENTRY,
         integrations=[
             DjangoIntegration(),
         ],
