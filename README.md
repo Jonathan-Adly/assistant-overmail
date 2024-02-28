@@ -8,7 +8,9 @@ For self-hosting. You will need Docker and Docker Compose for easy setup and dep
 
 ## **Updates**
 
-- 2/27/25: Response now come back in markdown
+- 2/28/24: Example Nginx for self-hosting
+
+- 2/27/24: Response now come back in markdown
 
 - 2/22/24: You can now respond to the Assistant email for follow up on requests
 
@@ -22,7 +24,7 @@ Follow these steps to get Assistant-OverMail up and running:
 1. Clone the repository:
 
 ```
-git clone https://github.com/yourgithub/assistant-overmail.git
+git clone https://github.com/jonathan-adly/assistant-overmail.git
 cd assistant-overmail
 ```
 
