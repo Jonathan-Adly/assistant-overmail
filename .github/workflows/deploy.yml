@@ -13,16 +13,16 @@ jobs:
       - uses: actions/checkout@v4 
       - name: Build & Deploy
         env:
-            PRIVATE_KEY: ${{ secrets.EC2_PRIVATE_SSH }}
-            HOSTNAME: ${{ secrets.EC2_HOSTNAME }}
-            USER_NAME: ec2-user
+            PRIVATE_KEY: ${{ secrets.VPS_PRIVATE_SSH }}
+            HOSTNAME: ${{ secrets.VPS_HOSTNAME }}
+            USER_NAME: root
 
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
 
               # Now we have got the access of EC2 and we will start the deploy .
-              cd overmail &&
+              cd assistant-overmail &&
               git checkout main &&
               git fetch --all &&
               git reset --hard origin/main &&
